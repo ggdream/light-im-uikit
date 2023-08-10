@@ -1,0 +1,63 @@
+import 'package:light_im_sdk/light_im_sdk.dart';
+
+import 'model/model.dart';
+
+class LightIMUIKit {
+  LightIMUIKit._();
+
+  static final _conversationModel = LimConversationModel();
+  static final _messageModelMap = <String, LimMessageModel>{};
+
+  static void init({
+    required String endpoint,
+    bool tls = false,
+  }) {
+    LightIMSDK.init(
+      endpoint: endpoint,
+      tls: tls,
+      listener: LightIMSDKListener(
+        onReceiveNewMessage: _onReceiveNewMessage,
+        onOpenNewConversation: _onOpenNewConversation,
+      ),
+    );
+  }
+
+  static Future<bool> login({
+    required String userId,
+    required String token,
+  }) async {
+    return await LightIMSDK.login(
+      userId: userId,
+      token: token,
+    );
+  }
+
+  static void _onReceiveNewMessage(LimMessage message) {
+    _conversationModel.update(message);
+
+    final model = _messageModelMap[message.userId];
+    if (model == null) return;
+
+    model.add(message);
+  }
+
+  static void _onOpenNewConversation(LimConversation conversation) {
+    _conversationModel.add(conversation);
+  }
+
+  static LimConversationModel getLimConversationModel() {
+    // _conversationModel.refresh();
+    return _conversationModel;
+  }
+
+  static LimMessageModel getLimMessageModel(String userId) {
+    var model = _messageModelMap[userId];
+    if (model == null) {
+      model = LimMessageModel(userId);
+      model.refresh();
+      _messageModelMap[userId] = model;
+    }
+
+    return model;
+  }
+}
