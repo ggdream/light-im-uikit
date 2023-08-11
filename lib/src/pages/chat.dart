@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:light_im_uikit/src/light_im_uikit.dart';
 import 'package:light_im_uikit/src/model/model.dart';
-import 'package:light_im_uikit/src/utils/date_fotmat.dart';
+import 'package:light_im_uikit/src/utils/date_format.dart';
 
 class LimChatPage extends StatefulWidget {
   LimChatPage({
@@ -59,21 +59,24 @@ class _LimChatPageState extends State<LimChatPage> {
             builder: (context, value, child) {
               final items = _calcDate(value.items.reversed.toList());
 
-              return ListView.separated(
-                reverse: true,
-                controller: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics(),
+              return RefreshIndicator(
+                onRefresh: widget.controller.pull,
+                child: ListView.separated(
+                  reverse: true,
+                  controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(
+                    parent: BouncingScrollPhysics(),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    return bubbleView(item);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 16);
+                  },
                 ),
-                padding: const EdgeInsets.all(16),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return bubbleView(item);
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 16);
-                },
               );
             },
           ),
@@ -253,8 +256,8 @@ class LimChatController {
   final LimConversation conversation;
   final LimMessageModel model;
 
-  Future<bool> pull() async {
-    return await model.refresh();
+  Future<void> pull() async {
+    await model.refresh();
   }
 
   Future<bool> mark() async {

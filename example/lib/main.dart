@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:light_im_uikit/light_im_uikit.dart';
 
@@ -8,7 +9,8 @@ void main() async {
   LightIMUIKit.init(endpoint: '127.0.0.1:8080/api/c');
   await LightIMUIKit.login(
     userId: '1',
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaXNzIjoibGlnaHQtaW0iLCJleHAiOjE2OTIyNjc0MTIsIm5iZiI6MTY5MTY2MjYxMiwiaWF0IjoxNjkxNjYyNjEyfQ.Z3lBQs_OH9zkDfdeLewie5ySdJ1PVTCnAwD6VF3JCPQ',
+    token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaXNzIjoibGlnaHQtaW0iLCJleHAiOjE2OTIzNjQxNTgsIm5iZiI6MTY5MTc1OTM1OCwiaWF0IjoxNjkxNzU5MzU4fQ.wkV6JmS3zADVQXTMIi_JqcBZX_5a7gWDrGUhG01igXA',
   );
 
   runApp(const MyApp());
@@ -19,9 +21,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Light IM UIKit',
-      home: MyHomePage(),
+      home: const MyHomePage(),
+      scrollBehavior: _CustomScrollBehavior(),
     );
   }
 }
@@ -48,4 +51,12 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
+}
+
+class _CustomScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
 }

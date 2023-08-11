@@ -32,6 +32,18 @@ class LightIMUIKit {
     );
   }
 
+  static Future<bool> logout() async {
+    final res = await LightIMSDK.logout();
+    if (!LightIMSDKHttp.checkRes(res)) {
+      return false;
+    }
+
+    _conversationModel.clear();
+    _messageModelMap.clear();
+
+    return true;
+  }
+
   static void _onReceiveNewMessage(LimMessage message) {
     _conversationModel.update(message);
 

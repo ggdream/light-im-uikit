@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:light_im_uikit/src/light_im_uikit.dart';
 import 'package:light_im_uikit/src/model/model.dart';
-import 'package:light_im_uikit/src/utils/date_fotmat.dart';
+import 'package:light_im_uikit/src/utils/date_format.dart';
 
 class LimConversationPage extends StatefulWidget {
   LimConversationPage({
@@ -51,16 +51,22 @@ class _LimConversationPageState extends State<LimConversationPage> {
       builder: (context, value, _) {
         final items = value.items;
 
-        return ListView.separated(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index];
+        return RefreshIndicator(
+          onRefresh: widget.controller.refresh,
+          child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
 
-            return convView(item);
-          },
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 4);
-          },
+              return convView(item);
+            },
+            separatorBuilder: (context, index) {
+              return const SizedBox(height: 4);
+            },
+          ),
         );
       },
     );
@@ -153,7 +159,7 @@ class _LimConversationPageState extends State<LimConversationPage> {
 class LimConversationController {
   final model = LightIMUIKit.getLimConversationModel();
 
-  Future<bool> refresh() async {
-    return await model.refresh();
+  Future<void> refresh() async {
+    await model.refresh();
   }
 }

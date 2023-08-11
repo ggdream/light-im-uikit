@@ -52,5 +52,10 @@ class LimConversationModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clear() {
+    _items.clear();
+    notifyListeners();
+  }
+
   List<LimConversation> get items => _items;
 }
