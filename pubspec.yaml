@@ -13,9 +13,16 @@ dependencies:
     sdk: flutter
   light_im_sdk:
     path: ../light-im-sdk
+  cross_file: ^0.3.3+4
   extended_image: ^8.0.2
+  extended_text_field: ^12.0.1
+  fc_native_video_thumbnail: ^0.5.2
+  file_selector: ^1.0.0
   flutter_slidable: ^3.0.0
+  path: ^1.8.3
+  path_provider: ^2.1.0
   provider: ^6.0.5
+  record: ^4.4.4
 
 dev_dependencies:
   flutter_test:

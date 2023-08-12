@@ -1,5 +1,9 @@
+import 'package:cross_file/cross_file.dart';
+import 'package:fc_native_video_thumbnail/fc_native_video_thumbnail.dart';
 import 'package:flutter/foundation.dart';
 import 'package:light_im_sdk/light_im_sdk.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 class LimMessageModel extends ChangeNotifier {
   final String userId;
@@ -9,6 +13,8 @@ class LimMessageModel extends ChangeNotifier {
   int sequence = 0;
 
   LimMessageModel(this.userId);
+
+  final _thumbnailPlugin = FcNativeVideoThumbnail();
 
   Future<bool> refresh() async {
     if (isEnd) return false;
@@ -28,15 +34,112 @@ class LimMessageModel extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> send({
-    required LimMessageType type,
-    String? text,
+  Future<bool> sendTextMessage({
+    required String text,
   }) async {
-    final res = await LightIMSDK.createMessage(
+    final res = await LightIMSDK.sendTextMessage(
       userId: userId,
-      type: type,
       text: text,
     );
+    if (!LightIMSDKHttp.checkRes(res)) return false;
+
+    return true;
+  }
+
+  Future<bool> sendImageMessage({
+    required XFile file,
+  }) async {
+    final dir = await getTemporaryDirectory();
+    final dst = join(dir.path, '${DateTime.now().millisecondsSinceEpoch}.jpg');
+    final isSuccess = await _thumbnailPlugin.getVideoThumbnail(
+      srcFile: file.path,
+      destFile: dst,
+      width: 480,
+      height: 480,
+      format: 'jpeg',
+      quality: 80,
+      keepAspectRatio: true,
+    );
+    var thumbnailFile = XFile(dst);
+    if (!isSuccess) {
+      // return false;
+      thumbnailFile = XFile('');
+    }
+
+    final res = await LightIMSDK.sendImageMessage(
+      userId: userId,
+      file: file,
+      thumbnailFile: thumbnailFile,
+    );
+    if (!LightIMSDKHttp.checkRes(res)) return false;
+
+    return true;
+  }
+
+  Future<bool> sendAudioMessage({
+    required XFile file,
+  }) async {
+    final res = await LightIMSDK.sendAudioMessage(userId: userId, file: file);
+    if (!LightIMSDKHttp.checkRes(res)) return false;
+
+    return true;
+  }
+
+  Future<bool> sendVideoMessage({
+    required XFile file,
+  }) async {
+    final dir = await getTemporaryDirectory();
+    final dst = join(dir.path, '${DateTime.now().millisecondsSinceEpoch}.jpg');
+    final isSuccess = await _thumbnailPlugin.getVideoThumbnail(
+      srcFile: file.path,
+      destFile: dst,
+      width: 480,
+      height: 480,
+      format: 'jpeg',
+      quality: 80,
+      keepAspectRatio: true,
+    );
+    var thumbnailFile = XFile(dst);
+    if (!isSuccess) {
+      // return false;
+      thumbnailFile = XFile('');
+    }
+
+    final res = await LightIMSDK.sendVideoMessage(
+      userId: userId,
+      file: file,
+      thumbnailFile: thumbnailFile,
+    );
+    if (!LightIMSDKHttp.checkRes(res)) return false;
+
+    return true;
+  }
+
+  Future<bool> sendFileMessage({
+    required XFile file,
+  }) async {
+    final res = await LightIMSDK.sendFileMessage(userId: userId, file: file);
+    if (!LightIMSDKHttp.checkRes(res)) return false;
+
+    return true;
+  }
+
+  Future<bool> sendCustomMessage({
+    required String custom,
+  }) async {
+    final res = await LightIMSDK.sendCustomMessage(
+      userId: userId,
+      custom: custom,
+    );
+    if (!LightIMSDKHttp.checkRes(res)) return false;
+
+    return true;
+  }
+
+  Future<bool> sendRecordMessage({
+    required XFile file,
+  }) async {
+    final res = await LightIMSDK.sendRecordMessage(userId: userId, file: file);
     if (!LightIMSDKHttp.checkRes(res)) return false;
 
     return true;

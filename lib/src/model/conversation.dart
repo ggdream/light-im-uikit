@@ -26,9 +26,16 @@ class LimConversationModel extends ChangeNotifier {
     }
   }
 
-  void del(String conversationId) {
-    _items.removeWhere((e) => e.conversationId == conversationId);
+  Future<bool> delete(LimConversation data) async {
+    _items.removeWhere((e) => e.conversationId == data.conversationId);
     notifyListeners();
+
+    final res = await LightIMSDK.deleteConversation(userId: data.userId);
+    if (!LightIMSDKHttp.checkRes(res)) {
+      return false;
+    }
+
+    return true;
   }
 
   void clearUnread(String conversationId) {
@@ -48,7 +55,9 @@ class LimConversationModel extends ChangeNotifier {
     if (index == -1) return;
 
     _items[index].lastMessage = message;
-    _items[index].unread++;
+    if (!message.isSelf) {
+      _items[index].unread++;
+    }
     notifyListeners();
   }
 

@@ -13,30 +13,25 @@ void main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaXNzIjoibGlnaHQtaW0iLCJleHAiOjE2OTIzNjQxNTgsIm5iZiI6MTY5MTc1OTM1OCwiaWF0IjoxNjkxNzU5MzU4fQ.wkV6JmS3zADVQXTMIi_JqcBZX_5a7gWDrGUhG01igXA',
   );
 
-  runApp(const MyApp());
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Light IM UIKit',
-      home: const MyHomePage(),
+      home: const HomePage(),
       scrollBehavior: _CustomScrollBehavior(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return LimConversationPage(
