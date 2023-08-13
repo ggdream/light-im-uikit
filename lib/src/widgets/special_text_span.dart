@@ -46,7 +46,7 @@ class EmoticonText extends SpecialText {
   final int start;
   final Map<String, String> emoticons;
 
-  static const flag = ']';
+  static const flag = '[';
 
   @override
   InlineSpan finishText() {
@@ -58,9 +58,10 @@ class EmoticonText extends SpecialText {
 
     return ImageSpan(
       AssetImage(asset),
-      imageWidth: 14,
-      imageHeight: 14,
+      imageWidth: 18,
+      imageHeight: 18,
       start: start,
+      actualText: text,
     );
   }
 }

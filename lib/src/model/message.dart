@@ -138,8 +138,13 @@ class LimMessageModel extends ChangeNotifier {
 
   Future<bool> sendRecordMessage({
     required XFile file,
+    required int duration,
   }) async {
-    final res = await LightIMSDK.sendRecordMessage(userId: userId, file: file);
+    final res = await LightIMSDK.sendRecordMessage(
+      userId: userId,
+      file: file,
+      duration: duration,
+    );
     if (!LightIMSDKHttp.checkRes(res)) return false;
 
     return true;

@@ -1,4 +1,5 @@
 import 'package:light_im_sdk/light_im_sdk.dart';
+import 'package:media_kit/media_kit.dart';
 
 import 'model/model.dart';
 
@@ -20,6 +21,8 @@ class LightIMUIKit {
         onOpenNewConversation: _onOpenNewConversation,
       ),
     );
+
+    MediaKit.ensureInitialized();
   }
 
   static Future<bool> login({

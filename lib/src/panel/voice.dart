@@ -15,7 +15,7 @@ class VoicePanelView extends StatefulWidget {
   });
 
   final double height;
-  final void Function(XFile) onFinish;
+  final void Function(XFile, int) onFinish;
 
   @override
   State<VoicePanelView> createState() => _VoicePanelViewState();
@@ -41,13 +41,14 @@ class _VoicePanelViewState extends State<VoicePanelView> {
       width: double.infinity,
       height: widget.height,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _isPressing
-              ? const Text('按住说话')
-              : Text(
-                  '${(_second / 60).toString().padLeft(2, '0')}:${(_second % 60).toString().padLeft(2, '0')}',
-                ),
-          const SizedBox(height: 16),
+              ? Text(
+                  '${((_second ~/ 1000) ~/ 60).toString().padLeft(2, '0')}:${((_second ~/ 1000) % 60).toString().padLeft(2, '0')}',
+                )
+              : const Text('按住说话'),
+          const SizedBox(height: 8),
           GestureDetector(
             onLongPressDown: _onDown,
             onLongPressEnd: _onEnd,
@@ -57,10 +58,15 @@ class _VoicePanelViewState extends State<VoicePanelView> {
               height: 64,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(32),
-                color: Theme.of(context).primaryColorLight,
+                color: _isPressing
+                    ? Theme.of(context).primaryColorDark
+                    : Theme.of(context).primaryColor,
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.mic_none_outlined),
+              child: const Icon(
+                Icons.mic_none_outlined,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -76,7 +82,7 @@ class _VoicePanelViewState extends State<VoicePanelView> {
     setState(() {
       _isPressing = true;
       _second = 0;
-      _timer = Timer.periodic(const Duration(seconds: 1), _onTimer);
+      _timer = Timer.periodic(const Duration(milliseconds: 50), _onTimer);
     });
 
     await _record.start(
@@ -87,7 +93,15 @@ class _VoicePanelViewState extends State<VoicePanelView> {
     );
   }
 
-  Future<void> _onEnd(LongPressEndDetails _) async {
+  Future<void> _onEnd(LongPressEndDetails details) async {
+    final dx = details.localPosition.dx;
+    final dy = details.localPosition.dy;
+    if (!(dx >= 0 && dy <= 64 && dy >= 0 && dy <= 64)) {
+      await _onCancel();
+      return;
+    }
+
+    final second = _second;
     final filePath = await _record.stop();
     setState(() {
       _isPressing = false;
@@ -96,8 +110,9 @@ class _VoicePanelViewState extends State<VoicePanelView> {
       _timer = null;
     });
     if (filePath == null) return;
+    if (second < 1000) return;
 
-    widget.onFinish.call(XFile(filePath));
+    widget.onFinish.call(XFile(filePath), second);
   }
 
   Future<void> _onCancel() async {
@@ -111,7 +126,11 @@ class _VoicePanelViewState extends State<VoicePanelView> {
   }
 
   void _onTimer(Timer _) {
-    if (++_second >= 60) {
+    setState(() {
+      _second += 50;
+    });
+
+    if (_second >= 60 * 1000) {
       _onEnd(const LongPressEndDetails());
     }
   }
