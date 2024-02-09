@@ -1,8 +1,7 @@
 name: light_im_uikit
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
-publish_to: none
+description: A light im.
+version: 0.1.0
+repository: https://github.com/ggdream/light-im-uikit
 
 environment:
   sdk: '>=3.0.5 <4.0.0'
@@ -11,8 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  light_im_sdk:
-    path: ../light-im-sdk
+  light_im_sdk: ^0.1.0
   cross_file: ^0.3.3+8
   extended_image: ^8.2.0
   extended_text_field: ^13.0.1
