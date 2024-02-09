@@ -6,13 +6,14 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 class LimMessageModel extends ChangeNotifier {
-  final String userId;
+  // final String userId;
+  final String conversationId;
 
   final _items = <LimMessage>[];
   bool isEnd = false;
   int sequence = 0;
 
-  LimMessageModel(this.userId);
+  LimMessageModel(this.conversationId);
 
   final _thumbnailPlugin = FcNativeVideoThumbnail();
 
@@ -20,8 +21,8 @@ class LimMessageModel extends ChangeNotifier {
     if (isEnd) return false;
 
     final res = await LightIMSDK.pullMessage(
-      userId: userId,
       sequence: sequence,
+      conversationId: conversationId,
     );
     if (res == null) return false;
 
@@ -38,7 +39,7 @@ class LimMessageModel extends ChangeNotifier {
     required String text,
   }) async {
     final res = await LightIMSDK.sendTextMessage(
-      userId: userId,
+      conversationId: conversationId,
       text: text,
     );
     if (!LightIMSDKHttp.checkRes(res)) return false;
@@ -67,7 +68,7 @@ class LimMessageModel extends ChangeNotifier {
     }
 
     final res = await LightIMSDK.sendImageMessage(
-      userId: userId,
+      conversationId: conversationId,
       file: file,
       thumbnailFile: thumbnailFile,
     );
@@ -79,7 +80,10 @@ class LimMessageModel extends ChangeNotifier {
   Future<bool> sendAudioMessage({
     required XFile file,
   }) async {
-    final res = await LightIMSDK.sendAudioMessage(userId: userId, file: file);
+    final res = await LightIMSDK.sendAudioMessage(
+      conversationId: conversationId,
+      file: file,
+    );
     if (!LightIMSDKHttp.checkRes(res)) return false;
 
     return true;
@@ -106,7 +110,7 @@ class LimMessageModel extends ChangeNotifier {
     }
 
     final res = await LightIMSDK.sendVideoMessage(
-      userId: userId,
+      conversationId: conversationId,
       file: file,
       thumbnailFile: thumbnailFile,
     );
@@ -118,7 +122,10 @@ class LimMessageModel extends ChangeNotifier {
   Future<bool> sendFileMessage({
     required XFile file,
   }) async {
-    final res = await LightIMSDK.sendFileMessage(userId: userId, file: file);
+    final res = await LightIMSDK.sendFileMessage(
+      conversationId: conversationId,
+      file: file,
+    );
     if (!LightIMSDKHttp.checkRes(res)) return false;
 
     return true;
@@ -128,7 +135,7 @@ class LimMessageModel extends ChangeNotifier {
     required String custom,
   }) async {
     final res = await LightIMSDK.sendCustomMessage(
-      userId: userId,
+      conversationId: conversationId,
       custom: custom,
     );
     if (!LightIMSDKHttp.checkRes(res)) return false;
@@ -141,7 +148,7 @@ class LimMessageModel extends ChangeNotifier {
     required int duration,
   }) async {
     final res = await LightIMSDK.sendRecordMessage(
-      userId: userId,
+      conversationId: conversationId,
       file: file,
       duration: duration,
     );
@@ -152,7 +159,7 @@ class LimMessageModel extends ChangeNotifier {
 
   Future<bool> mark() async {
     final res = await LightIMSDK.markMessage(
-      userId: userId,
+      conversationId: conversationId,
       sequence: sequence,
     );
     if (!LightIMSDKHttp.checkRes(res)) return false;

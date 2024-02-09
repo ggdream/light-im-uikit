@@ -30,7 +30,9 @@ class LimConversationModel extends ChangeNotifier {
     _items.removeWhere((e) => e.conversationId == data.conversationId);
     notifyListeners();
 
-    final res = await LightIMSDK.deleteConversation(userId: data.userId);
+    final res = await LightIMSDK.deleteConversation(
+      conversationId: data.conversationId,
+    );
     if (!LightIMSDKHttp.checkRes(res)) {
       return false;
     }

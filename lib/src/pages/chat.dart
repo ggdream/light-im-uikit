@@ -90,7 +90,7 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: LightIMUIKit.getLimMessageModel(widget.conversation.userId),
+      value: LightIMUIKit.getLimMessageModel(widget.conversation.conversationId),
       child: Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: appBar(),
@@ -758,7 +758,7 @@ class VideoBubbleView extends StatelessWidget {
 class LimChatController {
   LimChatController({
     required this.conversation,
-  }) : model = LightIMUIKit.getLimMessageModel(conversation.userId);
+  }) : model = LightIMUIKit.getLimMessageModel(conversation.conversationId);
 
   final LimConversation conversation;
   final LimMessageModel model;
@@ -769,7 +769,7 @@ class LimChatController {
 
   Future<bool> mark() async {
     final cModel = LightIMUIKit.getLimConversationModel();
-    final idx = cModel.items.indexWhere((e) => e.userId == model.userId);
+    final idx = cModel.items.indexWhere((e) => e.conversationId == model.conversationId);
     if (idx == -1 || cModel.items[idx].unread == 0) return true;
 
     final res = await model.mark();

@@ -50,7 +50,7 @@ class LightIMUIKit {
   static void _onReceiveNewMessage(LimMessage message) {
     _conversationModel.update(message);
 
-    final model = _messageModelMap[message.userId];
+    final model = _messageModelMap[message.conversationId];
     if (model == null) return;
 
     model.add(message);
@@ -65,12 +65,12 @@ class LightIMUIKit {
     return _conversationModel;
   }
 
-  static LimMessageModel getLimMessageModel(String userId) {
-    var model = _messageModelMap[userId];
+  static LimMessageModel getLimMessageModel(String conversationId) {
+    var model = _messageModelMap[conversationId];
     if (model == null) {
-      model = LimMessageModel(userId);
+      model = LimMessageModel(conversationId);
       model.refresh();
-      _messageModelMap[userId] = model;
+      _messageModelMap[conversationId] = model;
     }
 
     return model;

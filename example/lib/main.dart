@@ -10,7 +10,7 @@ void main() async {
   await LightIMUIKit.login(
     userId: '1',
     token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaXNzIjoibGlnaHQtaW0iLCJleHAiOjE2OTIzNjQxNTgsIm5iZiI6MTY5MTc1OTM1OCwiaWF0IjoxNjkxNzU5MzU4fQ.wkV6JmS3zADVQXTMIi_JqcBZX_5a7gWDrGUhG01igXA',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaXNzIjoibGlnaHQtaW0iLCJleHAiOjE3MDgxMDk3ODYsIm5iZiI6MTcwNzUwNDk4NiwiaWF0IjoxNzA3NTA0OTg2fQ.BVxffRXXAAlskNGYuK8mTC4pzT80FnYBHwcwb12VdC4',
   );
 
   runApp(const App());
