@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:light_im_sdk/light_im_sdk.dart';
 
@@ -5,16 +7,21 @@ class LimConversationModel extends ChangeNotifier {
   final _items = <LimConversation>[];
 
   Future<bool> refresh() async {
-    final res = await LightIMSDK.pullConversation();
-    if (res == null) return false;
+    try {
+      final res = await LightIMSDK.pullConversation();
+      if (res == null) return false;
 
-    _items.sort((a, b) => b.createAt - a.createAt);
-    _items
-      ..clear()
-      ..addAll(res);
-    notifyListeners();
+      _items.sort((a, b) => b.createAt - a.createAt);
+      _items
+        ..clear()
+        ..addAll(res);
+      notifyListeners();
 
-    return true;
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 
   void add(LimConversation data) {

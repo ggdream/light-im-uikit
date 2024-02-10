@@ -60,6 +60,10 @@ class LightIMUIKit {
     _conversationModel.add(conversation);
   }
 
+  static Future<bool> refreshConversation() async {
+    return await getLimConversationModel().refresh();
+  }
+
   static LimConversationModel getLimConversationModel() {
     // _conversationModel.refresh();
     return _conversationModel;
