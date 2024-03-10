@@ -32,4 +32,5 @@ migrate_working_dir/
 .packages
 build/
 
-.fvm
+# FVM Version Cache
+.fvm/

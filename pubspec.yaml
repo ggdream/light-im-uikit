@@ -2,7 +2,7 @@ name: light_im_uikit
 description: A light im.
 version: 0.1.1
 repository: https://github.com/ggdream/light-im-uikit
-
+publish_to: none
 environment:
   sdk: '>=3.0.5 <4.0.0'
   flutter: ">=1.17.0"
@@ -10,10 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  light_im_sdk: ^0.1.0
+  # light_im_sdk: ^0.1.0
+  light_im_sdk:
+    path: ../light-im-sdk
   cross_file: ^0.3.3+8
   extended_image: ^8.2.0
-  extended_text_field: ^13.0.1
+  extended_text_field: ^14.0.0
   fc_native_video_thumbnail: ^0.8.0
   file_selector: ^1.0.3
   flutter_slidable: ^3.0.1

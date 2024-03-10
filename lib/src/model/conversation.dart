@@ -5,6 +5,15 @@ import 'package:light_im_sdk/light_im_sdk.dart';
 
 class LimConversationModel extends ChangeNotifier {
   final _items = <LimConversation>[];
+  final List<void Function(int)> _unreadCountCallbackList = [];
+
+  addUneradCountListener(void Function(int) listener) {
+    _unreadCountCallbackList.add(listener);
+  }
+
+  removeUneradCountListener(void Function(int) listener) {
+    _unreadCountCallbackList.remove(listener);
+  }
 
   Future<bool> refresh() async {
     try {
@@ -76,4 +85,23 @@ class LimConversationModel extends ChangeNotifier {
   }
 
   List<LimConversation> get items => _items;
+
+  int getUnreadCount() {
+    int count = 0;
+    for (var e in _items) {
+      count += e.unread;
+    }
+
+    return count;
+  }
+
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
+
+    final unreadCount = getUnreadCount();
+    for (var e in _unreadCountCallbackList) {
+      e(unreadCount);
+    }
+  }
 }

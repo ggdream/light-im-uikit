@@ -6,8 +6,11 @@ import 'model/model.dart';
 class LightIMUIKit {
   LightIMUIKit._();
 
+  static String userId = '';
+
   static final _conversationModel = LimConversationModel();
   static final _messageModelMap = <String, LimMessageModel>{};
+  static final _onReceiveNewMessageList = <void Function(LimMessage)>[];
 
   static void init({
     required String endpoint,
@@ -29,6 +32,7 @@ class LightIMUIKit {
     required String userId,
     required String token,
   }) async {
+    LightIMUIKit.userId = userId;
     return await LightIMSDK.login(
       userId: userId,
       token: token,
@@ -47,13 +51,23 @@ class LightIMUIKit {
     return true;
   }
 
+  static void addNewMessageListener(void Function(LimMessage) listener) {
+    _onReceiveNewMessageList.add(listener);
+  }
+
+  static void removeNewMessageListener(void Function(LimMessage) listener) {
+    _onReceiveNewMessageList.remove(listener);
+  }
+
   static void _onReceiveNewMessage(LimMessage message) {
+    _onReceiveNewMessageList.forEach((e) => e(message));
     _conversationModel.update(message);
 
     final model = _messageModelMap[message.conversationId];
     if (model == null) return;
 
     model.add(message);
+
   }
 
   static void _onOpenNewConversation(LimConversation conversation) {
@@ -78,5 +92,23 @@ class LightIMUIKit {
     }
 
     return model;
+  }
+
+  static Future<LimConversation?> getConversation({
+    String? userId,
+    String? groupId,
+  }) async {
+    late final String conversationId;
+    if (userId != null) {
+      if (userId.compareTo(LightIMUIKit.userId) > 0) {
+        conversationId = 'c_${LightIMUIKit.userId}_$userId';
+      } else {
+        conversationId = 'c_${userId}_${LightIMUIKit.userId}';
+      }
+    } else {
+      conversationId = 'g_$groupId';
+    }
+
+    return await LightIMSDK.detailConversation(conversationId: conversationId);
   }
 }

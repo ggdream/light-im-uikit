@@ -30,6 +30,8 @@ class LimChatPage extends StatefulWidget {
     this.onTapAvatar,
     Map<String, String>? emoticons,
     required this.conversation,
+    this.customElemBuilder,
+    this.showPanel = true,
     LimChatController? controller,
   })  : emoticons = emoticons ?? _internalEmoticons,
         controller =
@@ -38,6 +40,8 @@ class LimChatPage extends StatefulWidget {
   final List<Widget>? actions;
   final void Function(String)? onTapAvatar;
   final Map<String, String> emoticons;
+  final Widget Function(BuildContext, String)? customElemBuilder;
+  final bool showPanel;
 
   final LimChatController controller;
   final LimConversation conversation;
@@ -90,7 +94,8 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: LightIMUIKit.getLimMessageModel(widget.conversation.conversationId),
+      value:
+          LightIMUIKit.getLimMessageModel(widget.conversation.conversationId),
       child: Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: appBar(),
@@ -103,7 +108,7 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
     return Column(
       children: [
         messageView(),
-        panelView(),
+        if (widget.showPanel) panelView(),
       ],
     );
   }
@@ -193,7 +198,9 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
         break;
 
       case LimMessageType.custom:
-        child = Text('自定义: ${message.custom!.content}');
+        child =
+            widget.customElemBuilder?.call(context, message.custom!.content) ??
+                Text('自定义: ${message.custom!.content}');
         break;
 
       case LimMessageType.record:
@@ -209,7 +216,7 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
-          onTap: () => widget.onTapAvatar?.call(widget.conversation.userId),
+          onTap: () => widget.onTapAvatar?.call(message.senderId),
           child: ExtendedImage.network(
             message.avatar,
             width: 40,
@@ -220,7 +227,8 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
         ),
         const SizedBox(width: 12),
         child,
-        const SizedBox(width: 108),
+        // const SizedBox(width: 108),
+        const SizedBox(width: 32),
       ],
     );
   }
@@ -769,7 +777,8 @@ class LimChatController {
 
   Future<bool> mark() async {
     final cModel = LightIMUIKit.getLimConversationModel();
-    final idx = cModel.items.indexWhere((e) => e.conversationId == model.conversationId);
+    final idx = cModel.items
+        .indexWhere((e) => e.conversationId == model.conversationId);
     if (idx == -1 || cModel.items[idx].unread == 0) return true;
 
     final res = await model.mark();

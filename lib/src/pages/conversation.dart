@@ -15,6 +15,7 @@ class LimConversationPage extends StatefulWidget {
     this.title,
     this.actions,
     required this.onTapItem,
+    this.onUnreadCountChange,
     LimConversationController? controller,
   }) : controller = controller ?? LimConversationController();
 
@@ -24,6 +25,7 @@ class LimConversationPage extends StatefulWidget {
 
   final LimConversationController controller;
   final void Function(LimConversation)? onTapItem;
+  final void Function(int)? onUnreadCountChange;
 
   @override
   State<LimConversationPage> createState() => _LimConversationPageState();
@@ -33,7 +35,22 @@ class _LimConversationPageState extends State<LimConversationPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.onUnreadCountChange != null) {
+      widget.controller.addUneradCountListenert(
+        widget.onUnreadCountChange!,
+      );
+    }
     widget.controller.refresh();
+  }
+
+  @override
+  void dispose() {
+    if (widget.onUnreadCountChange != null) {
+      widget.controller.removeUneradCountListener(
+        widget.onUnreadCountChange!,
+      );
+    }
+    super.dispose();
   }
 
   @override
@@ -110,7 +127,7 @@ class _LimConversationPageState extends State<LimConversationPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      item.lastMessage.nickname,
+                      item.nickname,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -134,7 +151,11 @@ class _LimConversationPageState extends State<LimConversationPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    DateFormatUtil.humanSimple(item.lastMessage.createAt),
+                    item.lastMessage == null
+                        ? ''
+                        : DateFormatUtil.humanSimple(
+                            item.lastMessage!.createAt,
+                          ),
                   ),
                   const SizedBox(height: 8),
                   CircleAvatar(
@@ -177,6 +198,14 @@ class _LimConversationPageState extends State<LimConversationPage> {
 
 class LimConversationController {
   final model = LightIMUIKit.getLimConversationModel();
+
+  void addUneradCountListenert(void Function(int) listener) {
+    model.addUneradCountListener(listener);
+  }
+
+  void removeUneradCountListener(void Function(int) listener) {
+    model.removeUneradCountListener(listener);
+  }
 
   Future<void> refresh() async {
     await model.refresh();

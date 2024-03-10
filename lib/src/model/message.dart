@@ -23,6 +23,7 @@ class LimMessageModel extends ChangeNotifier {
     final res = await LightIMSDK.pullMessage(
       sequence: sequence,
       conversationId: conversationId,
+      size: 20,
     );
     if (res == null) return false;
 

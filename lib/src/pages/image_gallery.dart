@@ -27,7 +27,7 @@ class _ImageGalleryPageState extends State<ImageGalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black87,
       extendBodyBehindAppBar: true,
       appBar: appBar(),
       body: bodyView(),
