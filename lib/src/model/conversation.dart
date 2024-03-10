@@ -76,6 +76,10 @@ class LimConversationModel extends ChangeNotifier {
     if (!message.isSelf) {
       _items[index].unread++;
     }
+
+    _items.sort((a, b) =>
+        (a.lastMessage?.createAt ?? 0) - (b.lastMessage?.createAt ?? 0));
+
     notifyListeners();
   }
 

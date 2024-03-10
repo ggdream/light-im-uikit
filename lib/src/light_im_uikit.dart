@@ -60,14 +60,15 @@ class LightIMUIKit {
   }
 
   static void _onReceiveNewMessage(LimMessage message) {
-    _onReceiveNewMessageList.forEach((e) => e(message));
+    for (var e in _onReceiveNewMessageList) {
+      e(message);
+    }
     _conversationModel.update(message);
 
     final model = _messageModelMap[message.conversationId];
     if (model == null) return;
 
     model.add(message);
-
   }
 
   static void _onOpenNewConversation(LimConversation conversation) {

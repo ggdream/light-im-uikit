@@ -238,8 +238,8 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
       padding: const EdgeInsets.only(
         left: 24,
         right: 24,
-        top: 8,
-        bottom: 6,
+        top: 4,
+        bottom: 2,
       ),
       color: Colors.grey.shade100,
       child: Column(
