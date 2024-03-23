@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:math';
 
@@ -18,6 +20,7 @@ import 'package:light_im_uikit/src/model/model.dart';
 import 'package:light_im_uikit/src/panel/panel.dart';
 import 'package:light_im_uikit/src/utils/date_format.dart';
 import 'package:light_im_uikit/src/utils/file_size.dart';
+import 'package:light_im_uikit/src/widgets/apply_perm.dart';
 import 'package:light_im_uikit/src/widgets/special_text_span.dart';
 
 import 'image_gallery.dart';
@@ -429,6 +432,13 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
   }
 
   Future<void> sendImageMessage() async {
+    final isGrant = await ApplyPermDialog.show(
+      context: context,
+      reason: '发送视频消息需要读取系统图片',
+      perms: [await ApplyPermDialog.photo],
+    );
+    if (!isGrant) return;
+
     final res = await widget.controller.sendImageMessage();
     if (res == null) return;
     if (!res) return;
@@ -437,6 +447,12 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
   }
 
   Future<void> sendAudioMessage() async {
+    final isGrant = await ApplyPermDialog.show(
+      context: context,
+      reason: '发送视频消息需要读取系统音频文件',
+      perms: [await ApplyPermDialog.audio],
+    );
+    if (!isGrant) return;
     final res = await widget.controller.sendAudioMessage();
     if (res == null) return;
     if (!res) return;
@@ -445,6 +461,13 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
   }
 
   Future<void> sendVideoMessage() async {
+    final isGrant = await ApplyPermDialog.show(
+      context: context,
+      reason: '发送视频消息需要读取系统视频文件',
+      perms: [await ApplyPermDialog.video],
+    );
+    if (!isGrant) return;
+
     final res = await widget.controller.sendVideoMessage();
     if (res == null) return;
     if (!res) return;
@@ -453,6 +476,13 @@ class _LimChatPageState extends State<LimChatPage> with WidgetsBindingObserver {
   }
 
   Future<void> sendFileMessage() async {
+    final isGrant = await ApplyPermDialog.show(
+      context: context,
+      reason: '发送文件消息需要读取系统文件',
+      perms: [await ApplyPermDialog.storage],
+    );
+    if (!isGrant) return;
+
     final res = await widget.controller.sendFileMessage();
     if (res == null) return;
     if (!res) return;

@@ -78,7 +78,7 @@ class LimConversationModel extends ChangeNotifier {
     }
 
     _items.sort((a, b) =>
-        (a.lastMessage?.createAt ?? 0) - (b.lastMessage?.createAt ?? 0));
+        (b.lastMessage?.createAt ?? 0) - (a.lastMessage?.createAt ?? 0));
 
     notifyListeners();
   }

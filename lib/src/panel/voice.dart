@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
+
+import 'package:light_im_uikit/src/widgets/apply_perm.dart';
 
 class VoicePanelView extends StatefulWidget {
   const VoicePanelView({
@@ -75,6 +78,13 @@ class _VoicePanelViewState extends State<VoicePanelView> {
   }
 
   Future<void> _onDown(LongPressDownDetails _) async {
+    final isGrant = await ApplyPermDialog.show(
+      context: context,
+      reason: '发送语音消息需要通过麦克风录制声音',
+      perms: [Permission.microphone],
+    );
+    if (!isGrant) return;
+
     if (_tmpPath.isEmpty) {
       _tmpPath = (await getTemporaryDirectory()).path;
     }

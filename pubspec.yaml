@@ -14,6 +14,7 @@ dependencies:
   light_im_sdk:
     path: ../light-im-sdk
   cross_file: ^0.3.3+8
+  device_info_plus: ^9.1.2
   extended_image: ^8.2.0
   extended_text_field: ^14.0.0
   fc_native_video_thumbnail: ^0.8.0
@@ -24,8 +25,10 @@ dependencies:
   media_kit_libs_video: ^1.0.4
   path: ^1.8.3
   path_provider: ^2.1.2
+  permission_handler: ^11.3.0
   provider: ^6.1.1
   record: ^4.4.4
+  universal_platform: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:
