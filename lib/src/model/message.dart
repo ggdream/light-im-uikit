@@ -60,7 +60,6 @@ class LimMessageModel extends ChangeNotifier {
       height: 480,
       format: 'jpeg',
       quality: 80,
-      keepAspectRatio: true,
     );
     var thumbnailFile = XFile(dst);
     if (!isSuccess) {
@@ -102,7 +101,6 @@ class LimMessageModel extends ChangeNotifier {
       height: 480,
       format: 'jpeg',
       quality: 80,
-      keepAspectRatio: true,
     );
     var thumbnailFile = XFile(dst);
     if (!isSuccess) {
